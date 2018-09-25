@@ -15,6 +15,7 @@ public class DataPacket extends IndexedFirestoreResource {
     private String patientName;
     private String title;
     private Date createDate;
+    private Map<String, Boolean> linkedProfiles;
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;

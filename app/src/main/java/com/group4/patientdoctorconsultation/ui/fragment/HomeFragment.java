@@ -31,6 +31,7 @@ import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.DataPacketViewModel;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
 
+import java.util.Map;
 import java.util.Objects;
 
 import androidx.navigation.Navigation;
@@ -117,7 +118,9 @@ public class HomeFragment extends FirestoreFragment
                 DataPacket dataPacket = new DataPacket();
                 dataPacket.setTitle(result.getValue());
                 if (selectedDoctor != null) {
-                    dataPacket.setDoctorId(selectedDoctor.getId());
+                    Map<String, Boolean> linkedProfiles = dataPacket.getLinkedProfiles();
+                    linkedProfiles.put(selectedDoctor.getId(), true);
+                    dataPacket.setLinkedProfiles(linkedProfiles);
                     dataPacket.setDoctorName(selectedDoctor.getUserName());
                 }
 
