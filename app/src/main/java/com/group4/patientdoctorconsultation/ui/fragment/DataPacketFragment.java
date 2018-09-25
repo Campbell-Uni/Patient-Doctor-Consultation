@@ -38,6 +38,7 @@ import com.group4.patientdoctorconsultation.viewmodel.DataPacketViewModel;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class DataPacketFragment extends FirestoreFragment implements View.OnClickListener {
@@ -136,7 +137,9 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
                     listener = viewModel.updatePacketItem(dataPacket, result);
                     break;
                 case RC_SET_PACKET_DOCTOR:
-                    dataPacket.setDoctorId(result.getValue());
+                    Map<String, Boolean> linkedProfiles = dataPacket.getLinkedProfiles();
+                    linkedProfiles.put(result.getValue(), true);
+                    dataPacket.setLinkedProfiles(linkedProfiles);
                     dataPacket.setDoctorName(result.getDisplayValue());
                     listener = viewModel.updateDataPacket(dataPacket);
                     break;

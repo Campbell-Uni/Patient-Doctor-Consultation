@@ -31,9 +31,8 @@ public class DataPacketRepository {
 
     public LiveQuery<DataPacket> getDataPacketsByPatientId(String patientId) {
         return new LiveQuery<>(
-                dataPacketCollection
-                        .whereEqualTo(DataPacket.FIELD_PATIENT_ID, patientId)
-                , DataPacket.class);
+                dataPacketCollection.whereEqualTo(DataPacket.FIELD_LINKED_PROFILES + "." + patientId , true),
+                DataPacket.class);
     }
 
     public LiveDocument<DataPacket> getDataPacketById(String patientId) {
@@ -64,7 +63,7 @@ public class DataPacketRepository {
         return liveCompleteListener;
     }
 
-    public LiveQuery<DataPacketItem> getDataPacketItemsByPacketId(String packetId){
+    public LiveQuery<DataPacketItem> getDataPacketItemsByPacketId(String packetId) {
         return new LiveQuery<>(
                 dataPacketCollection
                         .document(packetId)
@@ -73,7 +72,7 @@ public class DataPacketRepository {
         );
     }
 
-    public LiveResultListener<Boolean> updateDataPacketItem(DataPacket dataPacket, DataPacketItem dataPacketItem){
+    public LiveResultListener<Boolean> updateDataPacketItem(DataPacket dataPacket, DataPacketItem dataPacketItem) {
         LiveResultListener<Boolean> liveCompleteListener = new LiveResultListener<>();
         dataPacketCollection
                 .document(dataPacket.getId())
@@ -86,7 +85,7 @@ public class DataPacketRepository {
         return liveCompleteListener;
     }
 
-    public LiveResultListener<Boolean> deleteDataPacketItem(DataPacket dataPacket, DataPacketItem dataPacketItem){
+    public LiveResultListener<Boolean> deleteDataPacketItem(DataPacket dataPacket, DataPacketItem dataPacketItem) {
         LiveResultListener<Boolean> liveDeletionListener = new LiveResultListener<>();
         dataPacketCollection
                 .document(dataPacket.getId())
@@ -99,7 +98,7 @@ public class DataPacketRepository {
         return liveDeletionListener;
     }
 
-    public LiveResultListener<DocumentReference> addDataPacketItem(DataPacket dataPacket, DataPacketItem dataPacketItem){
+    public LiveResultListener<DocumentReference> addDataPacketItem(DataPacket dataPacket, DataPacketItem dataPacketItem) {
         LiveResultListener<DocumentReference> liveAdditionListener = new LiveResultListener<>();
         dataPacketCollection
                 .document(dataPacket.getId())
