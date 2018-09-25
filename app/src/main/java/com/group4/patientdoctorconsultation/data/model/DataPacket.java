@@ -1,5 +1,6 @@
 package com.group4.patientdoctorconsultation.data.model;
 
+import com.google.type.Date;
 import com.group4.patientdoctorconsultation.common.IndexedFirestoreResource;
 
 public class DataPacket extends IndexedFirestoreResource {
@@ -13,10 +14,20 @@ public class DataPacket extends IndexedFirestoreResource {
     private String patientId;
     private String patientName;
     private String title;
+    private Date createDate;
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
 
     public String getDoctorId() {
         return doctorId;
     }
+
 
     public void setDoctorId(String doctorId) {
         this.doctorId = doctorId;
@@ -45,6 +56,8 @@ public class DataPacket extends IndexedFirestoreResource {
     public void setPatientName(String patientName) {
         this.patientName = patientName;
     }
+
+
 
     public String getTitle() {
         return title;
