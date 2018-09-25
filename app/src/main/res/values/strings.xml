@@ -23,6 +23,7 @@
     <string name="submit">Save</string>
     <string name="home_card_title_data_packet">Data Packets</string>
     <string name="home_card_title_doctors">Doctors</string>
+    <string name="home_card_title_patients">Patients</string>
     <string name="home_card_title_nearby">Nearby Medical Facilities</string>
     <string name="add">+</string>
     <string name="hint_title">Title</string>

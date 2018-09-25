@@ -59,6 +59,7 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/linked_profile_title"
                 style="@style/Title"
                 android:text="@string/home_card_title_doctors" />
 
@@ -68,6 +69,25 @@
                 android:layout_height="match_parent"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_profile" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/new_patient_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                app:cardBackgroundColor="@color/colorOffWhite"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="@string/add"
+                    android:textSize="20sp" />
+
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 

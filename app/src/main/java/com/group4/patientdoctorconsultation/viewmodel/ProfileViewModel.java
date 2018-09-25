@@ -63,6 +63,14 @@ public class ProfileViewModel extends ViewModel implements FirebaseAuth.AuthStat
         return linkedProfiles;
     }
 
+    public LiveData<FailableResource<List<Profile>>> getAllProfiles(){
+        return profileRepository.getAllProfiles();
+    }
+
+    public LiveResultListener<Boolean> addLinkedProfile(String linkedProfileId){
+        return profileRepository.addLinkedProfile(profileId.getValue(), linkedProfileId);
+    }
+
     public void logout(){
         if(profile != null){
             firebaseAuth.signOut();

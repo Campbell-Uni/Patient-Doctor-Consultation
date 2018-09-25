@@ -40,11 +40,15 @@ public class Profile extends IndexedFirestoreResource {
     }
 
     public String getProfileTypeString(){
-        return profileType.toString();
+        return profileType != null ? profileType.toString() : "";
     }
 
     public void setProfileTypeString(String profileType){
-        this.profileType = ProfileType.valueOf(profileType);
+        try{
+            this.profileType = ProfileType.valueOf(profileType);
+        }catch (Exception e){
+            this.profileType = ProfileType.PATIENT;
+        }
     }
 
     public String getUserName() {

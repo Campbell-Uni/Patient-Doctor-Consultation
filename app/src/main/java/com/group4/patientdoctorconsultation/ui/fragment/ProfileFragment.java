@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.group4.patientdoctorconsultation.R;
 import com.group4.patientdoctorconsultation.common.FirestoreFragment;
 import com.group4.patientdoctorconsultation.data.model.Profile;
@@ -25,30 +24,31 @@ import java.util.Locale;
 
 public class ProfileFragment extends FirestoreFragment {
 
+
     private ProfileViewModel viewModel;
     private FragmentProfileBinding binding;
 
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
-         binding.setProfileHandler(this);
-         binding.signOutButton.setOnClickListener(view -> logout(null));
-         bindAge(binding.editAge);
-         observeProfile();
-         return binding.getRoot();
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
+        binding.setProfileHandler(this);
+        bindAge(binding.editAge);
+        observeProfile();
+        binding.signOutButton.setOnClickListener(view -> viewModel.logout());
+        return binding.getRoot();
     }
 
-    private void observeProfile(){
+    private void observeProfile() {
         viewModel = DependencyInjector.provideProfileViewModel(requireActivity());
         viewModel.getProfile().observe(this, profile -> {
-            if(profile != null && handleFirestoreResult(profile)){
+            if (profile != null && handleFirestoreResult(profile)) {
                 binding.setProfile(profile.getResource());
             }
         });
     }
 
-    private void bindAge(EditText ageField){
+    private void bindAge(EditText ageField) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.US);
         DatePickerDialog.OnDateSetListener datePicker = (datePicker1, year, monthOfYear, dayOfMonth) -> {
@@ -67,18 +67,14 @@ public class ProfileFragment extends FirestoreFragment {
         );
     }
 
-    public void submit(View view){ //Do not remove parameter, required for data binding
+    @SuppressWarnings("unused")
+    public void submit(View view) { //Do not remove parameter, required for data binding
         Profile profile = binding.getProfile();
         profile.setProfileType(Profile.ProfileType.DOCTOR);
         viewModel.updateProfile(profile).observe(this, isComplete -> {
-            if(isComplete != null && handleFirestoreResult(isComplete) && isComplete.getResource()){
-                Toast.makeText(requireContext(), "Saved",Toast.LENGTH_LONG).show();
+            if (isComplete != null && handleFirestoreResult(isComplete) && isComplete.getResource()) {
+                Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    public boolean logout(View view){ //Do not remove parameter, required for data binding
-        FirebaseAuth.getInstance().signOut();
-        return true;
     }
 }
