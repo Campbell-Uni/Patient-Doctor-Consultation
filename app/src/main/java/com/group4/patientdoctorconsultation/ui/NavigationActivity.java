@@ -2,6 +2,7 @@ package com.group4.patientdoctorconsultation.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.group4.patientdoctorconsultation.R;
@@ -66,6 +68,8 @@ public class NavigationActivity extends AppCompatActivity {
 
     private void initialiseViewModel() {
         ProfileViewModel viewModel = DependencyInjector.provideProfileViewModel(this);
+        int duration = Toast.LENGTH_LONG;
+        Context context = getApplicationContext();
         viewModel.getIsSignedIn().observe(this, isSignedIn -> {
             if (isSignedIn != null && !isSignedIn) {
                 startSignIn();
@@ -76,6 +80,19 @@ public class NavigationActivity extends AppCompatActivity {
                 profileType = profile.getResource().getProfileType();
             }
         });
+        if(profileType.equals(Profile.ProfileType.DOCTOR))
+        {
+          //jump to doctor profile
+        }
+        else if(profileType.equals(Profile.ProfileType.PATIENT))
+        {
+            //jump to patient profile
+
+        }
+        else{
+            Toast toast2 = Toast.makeText(context, "DID not find!!", duration);
+            toast2.show();
+        }
     }
 
     private void startSignIn() {
