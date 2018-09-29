@@ -24,7 +24,7 @@ public class ViewPatientProfileDialogFragment extends PacketItemDialog {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        //profile = (Profile); //Unsure what to assign profile to
+        //profile = (Profile); - Unsure what to assign profile to
         return super.onCreateDialog(savedInstanceState);
     }
 
