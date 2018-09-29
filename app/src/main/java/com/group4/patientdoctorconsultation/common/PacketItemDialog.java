@@ -82,3 +82,4 @@ public abstract class PacketItemDialog extends DialogFragment {
 
     protected abstract View getView(LayoutInflater inflater);
 }
+
