@@ -16,6 +16,12 @@
         app:titleTextColor="@android:color/white"
         android:theme="@style/ToolbarTheme"/>
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="doctor" />
+
     <fragment
         android:id="@+id/navigation_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -35,5 +41,6 @@
         app:itemIconTint="@android:color/white"
         app:itemTextColor="@android:color/white"
         app:menu="@menu/navigation_menu" />
+
 
 </LinearLayout>

@@ -76,23 +76,23 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
         viewModel.getProfile().observe(this, profile -> {
-            if(profile != null && profile.getResource() != null){
-                profileType = profile.getResource().getProfileType();
+           if(profile != null && profile.getResource() != null){
+               profileType = profile.getResource().getProfileType();
             }
         });
-        if(profileType.equals(Profile.ProfileType.DOCTOR))
-        {
+        //if(profileType.equals(Profile.ProfileType.DOCTOR))
+        //{
           //jump to doctor profile
-        }
-        else if(profileType.equals(Profile.ProfileType.PATIENT))
-        {
+       // }
+       // else if(profileType.equals(Profile.ProfileType.PATIENT))
+        //{
             //jump to patient profile
 
-        }
-        else{
-            Toast toast2 = Toast.makeText(context, "DID not find!!", duration);
-            toast2.show();
-        }
+       // }
+        //else{
+          //  Toast toast2 = Toast.makeText(context, "DID not find!!", duration);
+            //toast2.show();
+        //}
     }
 
     private void startSignIn() {

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profileActivity">
+
+    >
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,7 +25,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="26dp"
-        android:layout_marginTop="107dp"
+        android:layout_marginTop="85dp"
         android:text="Name"
         tools:text="Name" />
 
@@ -32,7 +33,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/editText3"
+        android:layout_alignStart="@+id/specialty"
         android:layout_alignTop="@+id/textView"
         android:contentDescription="Specialty"
         android:text="Specialty" />
@@ -41,26 +42,28 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/textView"
-        android:layout_alignTop="@+id/textView4"
+        android:layout_marginTop="204dp"
         android:text="Location" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/dname"
         android:layout_width="124dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textView"
-        android:layout_marginTop="151dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="111dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/specialty"
         android:layout_width="159dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editText2"
+        android:layout_alignBottom="@+id/dname"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="30dp"
         android:ems="10"
@@ -68,12 +71,11 @@
         android:hint="Specialty" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/location"
         android:layout_width="124dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/textView"
-        android:layout_marginBottom="223dp"
+        android:layout_alignStart="@+id/dname"
+        android:layout_below="@+id/textView3"
         android:ems="10"
         android:hint="B01.101"
         android:inputType="textPersonName" />
@@ -82,28 +84,47 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/textView2"
-        android:layout_marginTop="239dp"
+        android:layout_alignTop="@+id/textView3"
         android:text="E-mail" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/email"
         android:layout_width="158dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView2"
-        android:layout_alignTop="@+id/editText4"
+        android:layout_alignTop="@+id/location"
         android:ems="10"
         android:hint="123@gmail.com"
         android:inputType="textPersonName" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editText3"
+        android:layout_alignEnd="@+id/email"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="116dp"
+        android:layout_marginBottom="73dp"
         android:text="Save" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginBottom="254dp"
+        android:text="Description" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="79dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/dname"
+        android:layout_marginBottom="153dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="I am......"/>
 
 </RelativeLayout>
