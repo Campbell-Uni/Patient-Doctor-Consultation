@@ -58,6 +58,9 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_data_packet, container, false);
         viewModel = DependencyInjector.provideDataPacketViewModel(requireActivity());
 
+        Boolean isPatient = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT;
+        binding.setIsPatient(isPatient);
+
         initialisePacketItemList(binding.packetItemList);
 
         viewModel.getActivePacket().observe(this, activePacket -> {
@@ -76,7 +79,9 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
         binding.newComment.setOnClickListener(this);
         binding.newHeartRate.setOnClickListener(this);
         binding.newLocation.setOnClickListener(this);
-        binding.doctorIcon.setOnClickListener(this);
+        if(isPatient){
+            binding.doctorIcon.setOnClickListener(this);
+        }
 
         return binding.getRoot();
     }

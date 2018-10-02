@@ -3,6 +3,7 @@ package com.group4.patientdoctorconsultation.data.model;
 import com.google.type.Date;
 import com.group4.patientdoctorconsultation.common.IndexedFirestoreResource;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class DataPacket extends IndexedFirestoreResource {
@@ -15,7 +16,7 @@ public class DataPacket extends IndexedFirestoreResource {
     private String patientName;
     private String title;
     private Date createDate;
-    private Map<String, Boolean> linkedProfiles;
+    private Map<String, Boolean> linkedProfiles = new HashMap<>();
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;

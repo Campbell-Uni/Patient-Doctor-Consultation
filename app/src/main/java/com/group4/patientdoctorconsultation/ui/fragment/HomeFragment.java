@@ -80,13 +80,16 @@ public class HomeFragment extends FirestoreFragment
         });
 
         view.findViewById(R.id.new_packet_card).setOnClickListener(this);
+        boolean isPatient = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT;
 
-        if (((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.DOCTOR) {
+        if (!isPatient) {
             TextView title = view.findViewById(R.id.linked_profile_title);
             CardView newPatientCard = view.findViewById(R.id.new_patient_card);
+            CardView mapCard = view.findViewById(R.id.card_map);
             title.setText(R.string.home_card_title_patients);
             newPatientCard.setVisibility(View.VISIBLE);
             newPatientCard.setOnClickListener(this);
+            mapCard.setVisibility(View.GONE);
         }
 
         return view;
@@ -123,6 +126,9 @@ public class HomeFragment extends FirestoreFragment
                     dataPacket.setLinkedProfiles(linkedProfiles);
                     dataPacket.setDoctorName(selectedDoctor.getUserName());
                 }
+
+                String profileName = ((NavigationActivity) requireActivity()).getProfileName();
+                dataPacket.setPatientName(profileName);
 
                 dataPacketViewModel
                         .addDataPacket(dataPacket)

@@ -18,7 +18,6 @@ import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import androidx.navigation.NavController;
@@ -29,7 +28,7 @@ public class NavigationActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 1;
     private static final int RC_PERMISSION = 2;
-    private Profile.ProfileType profileType = Profile.ProfileType.PATIENT;
+    private Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,7 @@ public class NavigationActivity extends AppCompatActivity {
         });
         viewModel.getProfile().observe(this, profile -> {
             if(profile != null && profile.getResource() != null){
-                profileType = profile.getResource().getProfileType();
+                this.profile = profile.getResource();
             }
         });
     }
@@ -106,7 +105,11 @@ public class NavigationActivity extends AppCompatActivity {
         }
     }
 
+    public String getProfileName(){
+        return profile.getUserName();
+    }
+
     public Profile.ProfileType getProfileType() {
-        return profileType;
+        return profile == null ? Profile.ProfileType.PATIENT : profile.getProfileType();
     }
 }

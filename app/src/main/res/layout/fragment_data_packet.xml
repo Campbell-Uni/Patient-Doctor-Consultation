@@ -5,10 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable name="isPatient" type="Boolean"/>
         <variable
             name="dataPacket"
             type="com.group4.patientdoctorconsultation.data.model.DataPacket" />
+
+        <import type="android.view.View"/>
     </data>
 
     <RelativeLayout
@@ -49,7 +51,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{dataPacket.doctorName}"
+                            android:text="@{isPatient ? dataPacket.doctorName : dataPacket.patientName}"
                             android:textSize="15sp"
                             tools:text="Doctor Name" />
 
@@ -83,6 +85,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:visibility="@{isPatient ? View.VISIBLE : View.GONE}"
             fab:fab_addButtonColorNormal="@color/colorAccent"
             fab:fab_colorNormal="@color/colorAccent">
 
