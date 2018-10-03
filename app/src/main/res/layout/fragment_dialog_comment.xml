@@ -47,6 +47,16 @@
             android:padding="10dp"
             android:text="@={dataPacketItem.comment}" />
 
+        <Button
+                android:id="@+id/suggest_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Suggest Location"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
     </LinearLayout>
 
 </layout>
