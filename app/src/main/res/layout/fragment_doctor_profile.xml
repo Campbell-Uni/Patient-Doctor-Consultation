@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="java.lang.Integer" />
+        <import type="com.group4.patientdoctorconsultation.utilities.BindingAdapters" />
+
+        <variable
+            name="profileHandler"
+            type="com.group4.patientdoctorconsultation.ui.fragment.ProfileFragment" />
+
+        <variable
+            name="profile"
+            type="com.group4.patientdoctorconsultation.data.model.Profile" />
+
+    </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -99,12 +117,12 @@
         android:inputType="textPersonName" />
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/edit_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/email"
+        android:layout_alignEnd="@+id/dname"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="73dp"
+        android:layout_marginBottom="67dp"
         android:text="Save" />
 
     <TextView
@@ -127,4 +145,14 @@
         android:inputType="textPersonName"
         android:hint="I am......"/>
 
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/edit_save"
+        android:layout_toEndOf="@+id/textView4"
+        android:text="Button" />
+
+
 </RelativeLayout>
+</layout>
