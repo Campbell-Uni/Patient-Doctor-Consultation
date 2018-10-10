@@ -153,7 +153,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
 
     }
 
-    private void initialisePacketItemList(RecyclerView packetItemList) {
+      private void initialisePacketItemList(RecyclerView packetItemList) {
         packetItemAdapter = new PacketItemAdapter(packetItem -> {
             if(((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.DOCTOR){
                 openPacketItemDialog(CommentDialogFragment.newInstance(packetItem), RC_UPDATE_PACKET_ITEM);
