@@ -27,6 +27,7 @@ import com.group4.patientdoctorconsultation.ui.NavigationActivity;
 import com.group4.patientdoctorconsultation.ui.dialogfragment.NewPacketDialogFragment;
 import com.group4.patientdoctorconsultation.ui.dialogfragment.ProfileDialogFragment;
 import com.group4.patientdoctorconsultation.ui.dialogfragment.TextDialogFragment;
+import com.group4.patientdoctorconsultation.ui.dialogfragment.ViewPatientProfileDialogFragment;
 import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.DataPacketViewModel;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
@@ -40,9 +41,11 @@ public class HomeFragment extends FirestoreFragment
 
     private static final int RC_TITLE = 1;
     private static final int RC_PROFILE = 2;
+    private static final int RC_VIEW_PROFILE = 3;
     private static final String TAG = HomeFragment.class.getSimpleName();
 
     private DataPacketViewModel dataPacketViewModel;
+    private ProfileViewModel profileViewModel;
     private Profile selectedDoctor;
     private ProfileAdapter profileAdapter;
 
@@ -52,11 +55,13 @@ public class HomeFragment extends FirestoreFragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         dataPacketViewModel = DependencyInjector.provideDataPacketViewModel(requireActivity());
-        ProfileViewModel profileViewModel = DependencyInjector.provideProfileViewModel(requireActivity());
+        profileViewModel = DependencyInjector.provideProfileViewModel(requireActivity());
 
         profileAdapter = new ProfileAdapter(item -> {
+            viewPatientProfile(item);
+
             selectedDoctor = item;
-            createDataPacket();
+            /*createDataPacket();*/
         });
         RecyclerView profileList = view.findViewById(R.id.profile_list);
         profileList.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -165,4 +170,10 @@ public class HomeFragment extends FirestoreFragment
         profileDialogFragment.show(Objects.requireNonNull(getFragmentManager()).beginTransaction(), TAG);
     }
 
+    @SuppressLint("CommitTransaction")
+    private void viewPatientProfile(Profile patient) {
+        ViewPatientProfileDialogFragment viewPatientProfileDialogFragment = ViewPatientProfileDialogFragment.newInstance(patient);
+        viewPatientProfileDialogFragment.setTargetFragment(this, RC_VIEW_PROFILE);
+        viewPatientProfileDialogFragment.show(Objects.requireNonNull(getFragmentManager()).beginTransaction(), TAG);
+    }
 }

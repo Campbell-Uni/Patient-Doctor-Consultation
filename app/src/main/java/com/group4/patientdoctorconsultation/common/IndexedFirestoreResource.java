@@ -2,7 +2,9 @@ package com.group4.patientdoctorconsultation.common;
 
 import com.google.firebase.firestore.Exclude;
 
-public abstract class IndexedFirestoreResource {
+import java.io.Serializable;
+
+public abstract class IndexedFirestoreResource implements Serializable {
 
     private String id;
 
