@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <EditText
+            android:id="@+id/suggestion_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@color/colorOffWhite"
+            android:hint="@string/description_suggestion"
+            android:minHeight="150dp"
+            android:padding="10dp"/>
+
+    <TextView
+            android:id="@+id/place_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:visibility="gone"/>
+
+    <Button
+            android:id="@+id/select_location_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_location"
+            android:layout_margin="20dp"/>
+
+</LinearLayout>

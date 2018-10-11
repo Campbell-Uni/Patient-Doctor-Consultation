@@ -18,6 +18,7 @@ import com.group4.patientdoctorconsultation.data.repository.DataPacketRepository
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 public class DataPacketViewModel extends ViewModel implements FirebaseAuth.AuthStateListener {
 
@@ -76,7 +77,9 @@ public class DataPacketViewModel extends ViewModel implements FirebaseAuth.AuthS
     }
 
     public LiveResultListener<DocumentReference> addDataPacket(DataPacket dataPacket){
-        dataPacket.setPatientId(profileId.getValue());
+        Map<String, Boolean> linkedProfiles = dataPacket.getLinkedProfiles();
+        linkedProfiles.put(profileId.getValue(), true);
+        dataPacket.setLinkedProfiles(linkedProfiles);
         return dataPacketRepository.addDataPacket(dataPacket);
     }
 

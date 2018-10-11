@@ -2,7 +2,8 @@ package com.group4.patientdoctorconsultation.ui;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.group4.patientdoctorconsultation.R;
@@ -20,7 +20,6 @@ import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import androidx.navigation.NavController;
@@ -31,7 +30,7 @@ public class NavigationActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 1;
     private static final int RC_PERMISSION = 2;
-    private Profile.ProfileType profileType = Profile.ProfileType.PATIENT;
+    private Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +67,35 @@ public class NavigationActivity extends AppCompatActivity {
 
     private void initialiseViewModel() {
         ProfileViewModel viewModel = DependencyInjector.provideProfileViewModel(this);
-        int duration = Toast.LENGTH_LONG;
-        Context context = getApplicationContext();
         viewModel.getIsSignedIn().observe(this, isSignedIn -> {
             if (isSignedIn != null && !isSignedIn) {
                 startSignIn();
             }
         });
         viewModel.getProfile().observe(this, profile -> {
-           if(profile != null && profile.getResource() != null){
-               profileType = profile.getResource().getProfileType();
+            if(profile != null && profile.getResource() != null){
+                this.profile = profile.getResource();
+                if(this.profile.getProfileType() == Profile.ProfileType.NONE){
+                    Profile newProfile = this.profile;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Select a profile type");
+                    String[] profileTypes = {Profile.ProfileType.DOCTOR.toString(), Profile.ProfileType.PATIENT.toString()};
+                    builder.setItems(profileTypes, (dialog, which) -> {
+                       switch (which){
+                           case 0:
+                               newProfile.setProfileType(Profile.ProfileType.DOCTOR);
+                               break;
+                           default:
+                               newProfile.setProfileType(Profile.ProfileType.DOCTOR);
+                               break;
+                       }
+                       viewModel.updateProfile(newProfile);
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
         });
-
     }
 
     private void startSignIn() {
@@ -111,7 +126,11 @@ public class NavigationActivity extends AppCompatActivity {
         }
     }
 
+    public String getProfileName(){
+        return profile.getUserName();
+    }
+
     public Profile.ProfileType getProfileType() {
-        return profileType;
+        return profile == null || profile.getProfileType() == Profile.ProfileType.NONE ? Profile.ProfileType.PATIENT : profile.getProfileType();
     }
 }

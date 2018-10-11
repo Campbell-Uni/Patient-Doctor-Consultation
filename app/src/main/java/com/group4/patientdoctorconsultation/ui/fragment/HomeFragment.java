@@ -32,6 +32,7 @@ import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.DataPacketViewModel;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
 
+import java.util.Map;
 import java.util.Objects;
 
 import androidx.navigation.Navigation;
@@ -84,13 +85,16 @@ public class HomeFragment extends FirestoreFragment
         });
 
         view.findViewById(R.id.new_packet_card).setOnClickListener(this);
+        boolean isPatient = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT;
 
-        if (((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.DOCTOR) {
+        if (!isPatient) {
             TextView title = view.findViewById(R.id.linked_profile_title);
             CardView newPatientCard = view.findViewById(R.id.new_patient_card);
+            CardView mapCard = view.findViewById(R.id.card_map);
             title.setText(R.string.home_card_title_patients);
             newPatientCard.setVisibility(View.VISIBLE);
             newPatientCard.setOnClickListener(this);
+            mapCard.setVisibility(View.GONE);
         }
 
         return view;
@@ -122,9 +126,14 @@ public class HomeFragment extends FirestoreFragment
                 DataPacket dataPacket = new DataPacket();
                 dataPacket.setTitle(result.getValue());
                 if (selectedDoctor != null) {
-                    dataPacket.setDoctorId(selectedDoctor.getId());
+                    Map<String, Boolean> linkedProfiles = dataPacket.getLinkedProfiles();
+                    linkedProfiles.put(selectedDoctor.getId(), true);
+                    dataPacket.setLinkedProfiles(linkedProfiles);
                     dataPacket.setDoctorName(selectedDoctor.getUserName());
                 }
+
+                String profileName = ((NavigationActivity) requireActivity()).getProfileName();
+                dataPacket.setPatientName(profileName);
 
                 dataPacketViewModel
                         .addDataPacket(dataPacket)

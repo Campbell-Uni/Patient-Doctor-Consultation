@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Profile extends IndexedFirestoreResource {
 
-    public enum ProfileType{DOCTOR, PATIENT}
+    public enum ProfileType{DOCTOR, PATIENT, NONE}
 
     public static final String COLLECTION_NAME = "profiles";
 
@@ -55,7 +55,7 @@ public class Profile extends IndexedFirestoreResource {
         try{
             this.profileType = ProfileType.valueOf(profileType);
         }catch (Exception e){
-            this.profileType = ProfileType.PATIENT;
+            this.profileType = ProfileType.NONE;
         }
     }
 
