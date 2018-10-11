@@ -43,7 +43,7 @@ public abstract class PacketItemDialog extends DialogFragment {
                 })
                 .create();
 
-        alertDialog.setOnShowListener(dialogInterface -> {
+            alertDialog.setOnShowListener(dialogInterface -> {
             alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(saveEnabledByDefault());
             alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(cancelEnabledByDefault());
         });

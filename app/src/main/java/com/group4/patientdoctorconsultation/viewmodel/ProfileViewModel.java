@@ -21,6 +21,7 @@ public class ProfileViewModel extends ViewModel implements FirebaseAuth.AuthStat
     private final MutableLiveData<String> profileId = new MutableLiveData<>();
 
     private final LiveData<FailableResource<Profile>> profile;
+
     private final LiveData<FailableResource<List<Profile>>> linkedProfiles;
     private final FirebaseAuth firebaseAuth;
 
@@ -32,7 +33,6 @@ public class ProfileViewModel extends ViewModel implements FirebaseAuth.AuthStat
 
         profile = Transformations.switchMap(profileId, profileRepository::profileFromUserId);
         linkedProfiles = Transformations.switchMap(profileId, profileRepository::getLinkedProfiles);
-
     }
 
     @Override
