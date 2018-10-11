@@ -17,6 +17,7 @@ import com.group4.patientdoctorconsultation.R;
 import com.group4.patientdoctorconsultation.common.FirestoreFragment;
 import com.group4.patientdoctorconsultation.data.model.Profile;
 import com.group4.patientdoctorconsultation.databinding.FragmentProfileBinding;
+import com.group4.patientdoctorconsultation.ui.NavigationActivity;
 import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
 
@@ -34,7 +35,7 @@ public class ProfileFragment extends FirestoreFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if(profileType.equals(Profile.ProfileType.DOCTOR))
+        if(((NavigationActivity)requireActivity()).getProfileType().equals(Profile.ProfileType.DOCTOR))
         {
             binding= DataBindingUtil.inflate(inflater,R.layout.fragment_doctor_profile,container,false);
             binding.editSave.setOnClickListener(new View.OnClickListener() {
