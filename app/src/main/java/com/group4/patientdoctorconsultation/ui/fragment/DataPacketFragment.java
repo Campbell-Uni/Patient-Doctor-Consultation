@@ -100,7 +100,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
                 itemDialog = new LocationDialogFragment();
                 break;
             case R.id.doctor_icon:
-                itemDialog = new ProfileDialogFragment();
+                itemDialog = ProfileDialogFragment.newInstance(ProfileDialogFragment.EXTRA_PROFILE_LIST_TYPE_DOCTORS);
                 requestCode = RC_SET_PACKET_DOCTOR;
                 break;
             default:

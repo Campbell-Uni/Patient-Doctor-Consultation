@@ -12,12 +12,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.group4.patientdoctorconsultation.R;
 import com.group4.patientdoctorconsultation.common.FirestoreFragment;
 import com.group4.patientdoctorconsultation.data.model.Profile;
 import com.group4.patientdoctorconsultation.databinding.FragmentProfileBinding;
-import com.group4.patientdoctorconsultation.ui.NavigationActivity;
 import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
 
@@ -29,31 +27,15 @@ public class ProfileFragment extends FirestoreFragment {
 
     private ProfileViewModel viewModel;
     private FragmentProfileBinding binding;
-    private Profile.ProfileType profileType;
 
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        if(((NavigationActivity)requireActivity()).getProfileType().equals(Profile.ProfileType.DOCTOR))
-        {
-            binding= DataBindingUtil.inflate(inflater,R.layout.fragment_doctor_profile,container,false);
-            binding.editSave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    submit(v);
-                }
-            });
-
-        }
-        else {
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
-        }
-            binding.setProfileHandler(this);
-            binding.signOutButton.setOnClickListener(view -> logout(null));
-            bindAge(binding.editAge);
-            observeProfile();
-
+         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
+         binding.setProfileHandler(this);
+         binding.signOutButton.setOnClickListener(view -> logout(null));
+         bindAge(binding.editAge);
+         observeProfile();
          return binding.getRoot();
     }
 
