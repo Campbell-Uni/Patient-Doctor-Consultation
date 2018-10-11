@@ -23,6 +23,14 @@ public class Profile extends IndexedFirestoreResource {
     private String heightInCentimetres;
     private String weightInKg;
     private String medicalConditions;
+
+    //doctor profile
+   private String doctorname;
+   private  String specialty;
+   private String location;
+   private  String email;
+   private  String description;
+
     private Map<String, Boolean> linkedProfiles;
 
     /*
@@ -113,6 +121,47 @@ public class Profile extends IndexedFirestoreResource {
 
     public void setMedicalConditions(String medicalConditions) {
         this.medicalConditions = medicalConditions;
+    }
+
+    public String getDoctorname() {
+        return doctorname;
+    }
+
+    public void setDoctorname(String doctorname) {
+        this.doctorname = doctorname;
+    }
+
+    public String getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getEmail() {
+
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Map<String, Boolean> getLinkedProfiles() {
