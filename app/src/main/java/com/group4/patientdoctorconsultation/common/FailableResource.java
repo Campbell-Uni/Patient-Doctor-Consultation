@@ -18,7 +18,7 @@ public class FailableResource<T> {
         this.error = error;
     }
 
-    boolean isSuccessful(){
+    public boolean isSuccessful(){
         return resource != null && error == null;
     }
 

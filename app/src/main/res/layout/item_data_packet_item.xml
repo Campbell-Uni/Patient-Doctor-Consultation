@@ -88,6 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:gravity="center"
+                    android:autoLink="web"
                     android:text="@{dataPacketItem.comment}"
                     android:visibility="@{TextUtils.isEmpty(dataPacketItem.comment) ? View.GONE : View.VISIBLE}"
                     tools:text="Comment 1" />

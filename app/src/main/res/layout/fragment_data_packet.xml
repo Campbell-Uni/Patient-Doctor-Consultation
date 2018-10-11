@@ -85,7 +85,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:visibility="@{isPatient ? View.VISIBLE : View.GONE}"
             fab:fab_addButtonColorNormal="@color/colorAccent"
             fab:fab_colorNormal="@color/colorAccent">
 
@@ -102,6 +101,7 @@
                 android:id="@+id/new_heart_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="@{isPatient ? View.VISIBLE : View.GONE}"
                 fab:fab_colorNormal="@color/colorAccent"
                 fab:fab_icon="@drawable/ic_favorite_white_24dp"
                 fab:fab_size="mini"
@@ -111,6 +111,7 @@
                 android:id="@+id/new_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="@{isPatient ? View.VISIBLE : View.GONE}"
                 fab:fab_colorNormal="@color/colorAccent"
                 fab:fab_icon="@drawable/ic_text_fields_white_24dp"
                 fab:fab_size="mini"
@@ -120,6 +121,7 @@
                 android:id="@+id/new_attachment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="@{isPatient ? View.VISIBLE : View.GONE}"
                 fab:fab_colorNormal="@color/colorAccent"
                 fab:fab_icon="@drawable/ic_attach_file_white_24dp"
                 fab:fab_size="mini"

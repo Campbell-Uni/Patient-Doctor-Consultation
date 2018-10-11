@@ -2,6 +2,8 @@ package com.group4.patientdoctorconsultation.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -73,6 +75,25 @@ public class NavigationActivity extends AppCompatActivity {
         viewModel.getProfile().observe(this, profile -> {
             if(profile != null && profile.getResource() != null){
                 this.profile = profile.getResource();
+                if(this.profile.getProfileType() == Profile.ProfileType.NONE){
+                    Profile newProfile = this.profile;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Select a profile type");
+                    String[] profileTypes = {Profile.ProfileType.DOCTOR.toString(), Profile.ProfileType.PATIENT.toString()};
+                    builder.setItems(profileTypes, (dialog, which) -> {
+                       switch (which){
+                           case 0:
+                               newProfile.setProfileType(Profile.ProfileType.DOCTOR);
+                               break;
+                           default:
+                               newProfile.setProfileType(Profile.ProfileType.DOCTOR);
+                               break;
+                       }
+                       viewModel.updateProfile(newProfile);
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
         });
     }
@@ -110,6 +131,6 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     public Profile.ProfileType getProfileType() {
-        return profile == null ? Profile.ProfileType.PATIENT : profile.getProfileType();
+        return profile == null || profile.getProfileType() == Profile.ProfileType.NONE ? Profile.ProfileType.PATIENT : profile.getProfileType();
     }
 }

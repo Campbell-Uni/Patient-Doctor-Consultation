@@ -27,30 +27,24 @@ import com.group4.patientdoctorconsultation.data.model.DataPacketItem;
 import com.group4.patientdoctorconsultation.data.model.Profile;
 import com.group4.patientdoctorconsultation.databinding.FragmentDataPacketBinding;
 import com.group4.patientdoctorconsultation.ui.NavigationActivity;
-import com.group4.patientdoctorconsultation.ui.dialogfragment.AttachmentDialogFragment;
-import com.group4.patientdoctorconsultation.ui.dialogfragment.CommentDialogFragment;
-import com.group4.patientdoctorconsultation.ui.dialogfragment.HeartRateDialogFragment;
-import com.group4.patientdoctorconsultation.ui.dialogfragment.LocationDialogFragment;
-import com.group4.patientdoctorconsultation.ui.dialogfragment.ProfileDialogFragment;
-import com.group4.patientdoctorconsultation.ui.dialogfragment.TextDialogFragment;
+import com.group4.patientdoctorconsultation.ui.dialogfragment.*;
 import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.DataPacketViewModel;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class DataPacketFragment extends FirestoreFragment implements View.OnClickListener {
 
     private static final int RC_ADD_PACKET_ITEM = 1;
     private static final int RC_UPDATE_PACKET_ITEM = 2;
     private static final int RC_SET_PACKET_DOCTOR = 3;
+    private static final int RC_LOCATION_SUGGESTION = 4;
     private static final String TAG = DataPacketFragment.class.getSimpleName();
 
     private PacketItemAdapter packetItemAdapter;
     private DataPacketViewModel viewModel;
     private FragmentDataPacketBinding binding;
+    private Boolean isPatient;
 
     @Nullable
     @Override
@@ -58,7 +52,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_data_packet, container, false);
         viewModel = DependencyInjector.provideDataPacketViewModel(requireActivity());
 
-        Boolean isPatient = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT;
+        isPatient = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT;
         binding.setIsPatient(isPatient);
 
         initialisePacketItemList(binding.packetItemList);
@@ -70,7 +64,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
         });
 
         viewModel.getActivePacketItems().observe(this, packetItems -> {
-            if(packetItems != null && handleFirestoreResult(packetItems)){
+            if (packetItems != null && handleFirestoreResult(packetItems)) {
                 updatePacketBinding(packetItems.getResource());
             }
         });
@@ -79,7 +73,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
         binding.newComment.setOnClickListener(this);
         binding.newHeartRate.setOnClickListener(this);
         binding.newLocation.setOnClickListener(this);
-        if(isPatient){
+        if (isPatient) {
             binding.doctorIcon.setOnClickListener(this);
         }
 
@@ -92,7 +86,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
         PacketItemDialog itemDialog;
         int requestCode = RC_ADD_PACKET_ITEM;
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.new_attachment:
                 itemDialog = new AttachmentDialogFragment();
                 break;
@@ -103,7 +97,12 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
                 itemDialog = new HeartRateDialogFragment();
                 break;
             case R.id.new_location:
-                itemDialog = new LocationDialogFragment();
+                if (isPatient) {
+                    itemDialog = new LocationDialogFragment();
+                } else {
+                    itemDialog = new LocationSuggestionDialogFragment();
+                    requestCode = RC_LOCATION_SUGGESTION;
+                }
                 break;
             case R.id.doctor_icon:
                 itemDialog = ProfileDialogFragment.newInstance(ProfileDialogFragment.EXTRA_PROFILE_LIST_TYPE_DOCTORS);
@@ -122,16 +121,16 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        List<Integer> requestCodes = Arrays.asList(RC_ADD_PACKET_ITEM, RC_UPDATE_PACKET_ITEM , RC_SET_PACKET_DOCTOR);
-        if(resultCode != Activity.RESULT_OK || !requestCodes.contains(requestCode)) {
+        List<Integer> requestCodes = Arrays.asList(RC_ADD_PACKET_ITEM, RC_UPDATE_PACKET_ITEM, RC_SET_PACKET_DOCTOR, RC_LOCATION_SUGGESTION);
+        if (resultCode != Activity.RESULT_OK || !requestCodes.contains(requestCode)) {
             return;
         }
 
-        try{
+        try {
             LiveResultListener<?> listener = null;
             DataPacket dataPacket = binding.getDataPacket();
             DataPacketItem result = Objects.requireNonNull(
-                (DataPacketItem) data.getSerializableExtra(PacketItemDialog.EXTRA_RESULT)
+                    (DataPacketItem) data.getSerializableExtra(PacketItemDialog.EXTRA_RESULT)
             );
 
             switch (requestCode) {
@@ -148,6 +147,15 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
                     dataPacket.setDoctorName(result.getDisplayValue());
                     listener = viewModel.updateDataPacket(dataPacket);
                     break;
+                case RC_LOCATION_SUGGESTION:
+                    if (result.getValue().contains("http://maps.google.com/?q=")) {
+                        List<String> locations = dataPacket.getLocations();
+                        locations.add(result.getValue());
+                        dataPacket.setLocations(locations);
+                    }
+                    listener = viewModel.addDataPacketItem(dataPacket, result);
+                    viewModel.updateDataPacket(dataPacket);
+                    break;
             }
 
             listener.observe(this, actionResult -> {
@@ -163,20 +171,26 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
 
     private void initialisePacketItemList(RecyclerView packetItemList) {
         packetItemAdapter = new PacketItemAdapter(packetItem -> {
-            if(((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.DOCTOR){
+            if (!isPatient) {
                 openPacketItemDialog(CommentDialogFragment.newInstance(packetItem), RC_UPDATE_PACKET_ITEM);
             }
         });
         packetItemList.setLayoutManager(new LinearLayoutManager(requireContext()));
         packetItemList.setAdapter(packetItemAdapter);
 
+        if (isPatient) {
+            initialiseDeleteOnSwipe(packetItemList);
+        }
+    }
+
+    private void initialiseDeleteOnSwipe(RecyclerView packetItemList) {
         SwipeDeleteAction swipeDeleteAction = new SwipeDeleteAction(requireContext()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 DataPacketItem packetItem = packetItemAdapter.getItem(viewHolder.getAdapterPosition());
                 packetItemAdapter.removeAt(viewHolder.getAdapterPosition());
-                viewModel.deleteDataPacketItem(binding.getDataPacket(), packetItem).observe( DataPacketFragment.this, result -> {
-                    if(result != null && handleFirestoreResult(result) && result.getResource()){
+                viewModel.deleteDataPacketItem(binding.getDataPacket(), packetItem).observe(DataPacketFragment.this, result -> {
+                    if (result != null && handleFirestoreResult(result) && result.getResource()) {
                         Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -193,21 +207,21 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
     }
 
     private void updateAttachmentDisplayText(List<DataPacketItem> packetItems) {
-        if(packetItems == null || packetItems.isEmpty()){
+        if (packetItems == null || packetItems.isEmpty()) {
             return;
         }
 
-        for(DataPacketItem packetItem : packetItems){
-            if(packetItem.getDataPacketItemType() != DataPacketItem.DataPacketItemType.DOCUMENT_REFERENCE){
+        for (DataPacketItem packetItem : packetItems) {
+            if (packetItem.getDataPacketItemType() != DataPacketItem.DataPacketItemType.DOCUMENT_REFERENCE) {
                 continue;
             }
 
             viewModel.getFileMetaData(packetItem.getValue()).observe(this, storageMetadata -> {
-                if(storageMetadata != null && handleFirestoreResult(storageMetadata)){
+                if (storageMetadata != null && handleFirestoreResult(storageMetadata)) {
                     List<DataPacketItem> newItems = packetItemAdapter.getListItems();
 
-                    for(DataPacketItem dataPacketItem : newItems){
-                        if(dataPacketItem.getValue().equals(packetItem.getValue())){
+                    for (DataPacketItem dataPacketItem : newItems) {
+                        if (dataPacketItem.getValue().equals(packetItem.getValue())) {
                             dataPacketItem.setDisplayValue(storageMetadata.getResource().getName());
                         }
                     }
@@ -219,7 +233,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
     }
 
     @SuppressLint("CommitTransaction")
-    private void openPacketItemDialog(PacketItemDialog packetItemDialog, int requestCode){
+    private void openPacketItemDialog(PacketItemDialog packetItemDialog, int requestCode) {
         packetItemDialog.setTargetFragment(this, requestCode);
         packetItemDialog.show(Objects.requireNonNull(getFragmentManager()).beginTransaction(), TAG);
     }

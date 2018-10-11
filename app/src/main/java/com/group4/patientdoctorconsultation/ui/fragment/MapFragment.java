@@ -20,16 +20,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.group4.patientdoctorconsultation.R;
+import com.group4.patientdoctorconsultation.data.model.DataPacket;
+import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
+import com.group4.patientdoctorconsultation.viewmodel.DataPacketViewModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = MapFragment.class.getSimpleName();
+    private Map<String, LatLng> packetPlaces = new HashMap<>();
 
     @SuppressLint("MissingPermission")
     @Nullable
@@ -38,6 +41,52 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         SupportMapFragment map = Objects.requireNonNull((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
+        DataPacketViewModel viewModel = DependencyInjector.provideDataPacketViewModel(requireActivity());
+        viewModel.getDataPackets().observe(this, packets -> {
+            if (packets != null && packets.isSuccessful() && packets.getResource() != null) {
+                for (DataPacket dataPacket : packets.getResource()) {
+                    if(!dataPacket.getLocations().isEmpty()){
+                        for (String location : dataPacket.getLocations()) {
+                            try {
+                                String[] commentParts = location.split("\n");
+                                StringBuilder name = new StringBuilder("Suggested Location");
+                                double latitude = 0;
+                                double longitude = 0;
+
+                                int locationIndex = -1;
+
+                                for (int i = 0; i < commentParts.length; i++) {
+                                    String commentPart = commentParts[i];
+                                    if(commentPart.contains("http://maps.google.com/?q=")){
+                                        String[] locationParts = commentPart
+                                                .replace("http://maps.google.com/?q=", "")
+                                                .split(",");
+                                        latitude = Double.parseDouble(locationParts[0]);
+                                        longitude = Double.parseDouble(locationParts[1]);
+
+                                        locationIndex = i;
+                                        break;
+                                    }
+                                }
+
+                                if(locationIndex == -1){
+                                    return;
+                                }
+
+                                name = new StringBuilder();
+                                for(int i = 0; i < locationIndex; i++){
+                                    name.append(commentParts[i]);
+                                }
+
+                                packetPlaces.put(name.toString(), new LatLng(latitude, longitude));
+                            }catch (Exception e){
+                                Log.w(TAG, "Failed to parse location string: " + e.getMessage());
+                            }
+                        }
+                    }
+                }
+            }
+        });
         map.getMapAsync(this);
 
         return view;
@@ -50,6 +99,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.setMinZoomPreference(15);
 
+        for (Map.Entry<String, LatLng> packetPlace : packetPlaces.entrySet()) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(packetPlace.getValue())
+                .title(packetPlace.getKey())
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+
+            googleMap.addMarker(markerOptions);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(packetPlace.getValue()));
+        }
+
         Places.getPlaceDetectionClient(requireActivity(), null)
                 .getCurrentPlace(null)
                 .addOnCompleteListener(task -> {
@@ -60,7 +119,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                             Place currentPlace = placeLikelihood.getPlace().freeze();
                             for (int type : currentPlace.getPlaceTypes()) {
-                                if (true) {//type == Place.TYPE_HEALTH || type == Place.TYPE_DOCTOR || type == Place.TYPE_HOSPITAL  ){
+                                if (type == Place.TYPE_HEALTH || type == Place.TYPE_DOCTOR || type == Place.TYPE_HOSPITAL  ){
                                     markerOptions = new MarkerOptions();
 
                                     markerOptions.position(currentPlace.getLatLng())

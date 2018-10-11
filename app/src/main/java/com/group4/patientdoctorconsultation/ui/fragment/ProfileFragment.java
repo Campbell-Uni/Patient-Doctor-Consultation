@@ -70,7 +70,6 @@ public class ProfileFragment extends FirestoreFragment {
     @SuppressWarnings("unused")
     public void submit(View view) { //Do not remove parameter, required for data binding
         Profile profile = binding.getProfile();
-        profile.setProfileType(Profile.ProfileType.DOCTOR);
         viewModel.updateProfile(profile).observe(this, isComplete -> {
             if (isComplete != null && handleFirestoreResult(isComplete) && isComplete.getResource()) {
                 Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show();

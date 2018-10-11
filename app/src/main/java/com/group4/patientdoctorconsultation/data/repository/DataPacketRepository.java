@@ -30,6 +30,9 @@ public class DataPacketRepository {
     }
 
     public LiveQuery<DataPacket> getDataPacketsByPatientId(String patientId) {
+        if(patientId == null || patientId.isEmpty()){
+            patientId = "0";
+        }
         return new LiveQuery<>(
                 dataPacketCollection.whereEqualTo(DataPacket.FIELD_LINKED_PROFILES + "." + patientId , true),
                 DataPacket.class);
