@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.group4.patientdoctorconsultation.R;
 import com.group4.patientdoctorconsultation.common.FirestoreFragment;
 import com.group4.patientdoctorconsultation.data.model.Profile;
+import com.group4.patientdoctorconsultation.databinding.FragmentDoctorProfileBinding;
 import com.group4.patientdoctorconsultation.databinding.FragmentProfileBinding;
 import com.group4.patientdoctorconsultation.ui.NavigationActivity;
 import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
@@ -27,43 +28,47 @@ import java.util.Locale;
 public class ProfileFragment extends FirestoreFragment {
 
     private ProfileViewModel viewModel;
-    private FragmentProfileBinding binding;
+    private FragmentProfileBinding patientBinding;
+    private FragmentDoctorProfileBinding doctorBinding;
+    private Boolean isPatient;
 
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(((NavigationActivity)requireActivity()).getProfileType().equals(Profile.ProfileType.DOCTOR))
-        {
-            binding= DataBindingUtil.inflate(inflater,R.layout.fragment_doctor_profile,container,false);
-            binding.editSave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    submit(v);
-                }
-            });
+        isPatient =((NavigationActivity) requireActivity()).getProfileType().equals(Profile.ProfileType.PATIENT);
+        View view;
 
+        if (isPatient) {
+            patientBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
+            patientBinding.setProfileHandler(this);
+            patientBinding.signOutButton.setOnClickListener(this::logout);
+            bindAge(patientBinding.editAge);
+            view = patientBinding.getRoot();
+        } else {
+            doctorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_doctor_profile, container, false);
+            doctorBinding.setProfileHandler(this);
+            doctorBinding.editSave.setOnClickListener(this::submit);
+            view = doctorBinding.getRoot();
         }
-        else {
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
-        }
-        binding.setProfileHandler(this);
-        binding.signOutButton.setOnClickListener(view -> logout(null));
-        bindAge(binding.editAge);
+
         observeProfile();
-
-        return binding.getRoot();
+        return view;
     }
 
-    private void observeProfile(){
+    private void observeProfile() {
         viewModel = DependencyInjector.provideProfileViewModel(requireActivity());
         viewModel.getProfile().observe(this, profile -> {
-            if(profile != null && handleFirestoreResult(profile)){
-                binding.setProfile(profile.getResource());
+            if (profile != null && handleFirestoreResult(profile)) {
+                if(isPatient){
+                    patientBinding.setProfile(profile.getResource());
+                }else{
+                    doctorBinding.setProfile(profile.getResource());
+                }
             }
         });
     }
 
-    private void bindAge(EditText ageField){
+    private void bindAge(EditText ageField) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.US);
         DatePickerDialog.OnDateSetListener datePicker = (datePicker1, year, monthOfYear, dayOfMonth) -> {
@@ -82,16 +87,23 @@ public class ProfileFragment extends FirestoreFragment {
         );
     }
 
-    public void submit(View view){ //Do not remove parameter, required for data binding
-        Profile profile = binding.getProfile();
+    public void submit(View view) { //Do not remove parameter, required for data patientBinding
+        Profile profile;
+
+        if(isPatient){
+            profile = patientBinding.getProfile();
+        }else{
+            profile = doctorBinding.getProfile();
+        }
+
         viewModel.updateProfile(profile).observe(this, isComplete -> {
-            if(isComplete != null && handleFirestoreResult(isComplete) && isComplete.getResource()){
-                Toast.makeText(requireContext(), "Saved",Toast.LENGTH_LONG).show();
+            if (isComplete != null && handleFirestoreResult(isComplete) && isComplete.getResource()) {
+                Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public boolean logout(View view){ //Do not remove parameter, required for data binding
+    public boolean logout(View view) { //Do not remove parameter, required for data patientBinding
         FirebaseAuth.getInstance().signOut();
         return true;
     }
