@@ -19,7 +19,9 @@
 
             <TextView
                 style="@style/Title"
-                android:text="@string/home_card_title_data_packet" />
+                android:text="@string/home_card_title_data_packet"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/data_packet_list"
@@ -61,7 +63,9 @@
             <TextView
                 android:id="@+id/linked_profile_title"
                 style="@style/Title"
-                android:text="@string/home_card_title_doctors" />
+                android:text="@string/home_card_title_doctors"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/profile_list"
@@ -104,7 +108,9 @@
 
             <TextView
                 style="@style/Title"
-                android:text="@string/home_card_title_nearby" />
+                android:text="@string/home_card_title_nearby"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
 
             <fragment
                 android:id="@+id/map_fragment"
