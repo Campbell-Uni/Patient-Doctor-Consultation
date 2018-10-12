@@ -3,8 +3,8 @@
     <color name="colorPrimary">#82ada9</color>
     <color name="colorPrimaryDark">#82ada9</color>
     <color name="colorAccent">#82ada9</color>
-    <color name="colorBackground">#eceff1</color>
-    <color name="colorOffWhite">#eceff1</color>
-    <color name="colorSelectedOffWhite">#eceff1</color>
+    <color name="colorBackground">#e0f2f1</color>
+    <color name="colorOffWhite">#e0f2f1</color>
+    <color name="colorSelectedOffWhite">#e0f2f1</color>
     <color name="colorDelete">#ff7961</color>
 </resources>
