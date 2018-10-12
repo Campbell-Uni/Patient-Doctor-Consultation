@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1e88e5</color>
-    <color name="colorPrimaryDark">#005cb2</color>
-    <color name="colorAccent">#f06292</color>
-    <color name="colorBackground">#f7f7f7</color>
-    <color name="colorOffWhite">#f7f7f7</color>
-    <color name="colorSelectedOffWhite">#f2f2f2</color>
+    <color name="colorPrimary">#82ada9</color>
+    <color name="colorPrimaryDark">#82ada9</color>
+    <color name="colorAccent">#82ada9</color>
+    <color name="colorBackground">#eceff1</color>
+    <color name="colorOffWhite">#eceff1</color>
+    <color name="colorSelectedOffWhite">#eceff1</color>
     <color name="colorDelete">#ff7961</color>
 </resources>
