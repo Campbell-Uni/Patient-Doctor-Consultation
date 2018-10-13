@@ -127,6 +127,7 @@
             android:layout_height="wrap_content"
 
             android:text="@string/label_profile_first_name"
+
             app:layout_constraintBottom_toTopOf="@+id/edit_first_name"
             app:layout_constraintStart_toStartOf="@+id/edit_first_name" />
 
@@ -194,6 +195,9 @@
             android:onClick="@{profileHandler::submit}"
 
             android:text="@string/submit"
+            android:textSize="20sp"
+            android:textColor="@color/colorOffWhite"
+            android:background="@color/colorPrimary"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sign_out_button"
@@ -208,6 +212,9 @@
             android:layout_marginStart="20dp"
 
             android:text="Sign Out"
+            android:textSize="20sp"
+            android:textColor="@color/colorOffWhite"
+            android:background="@color/colorPrimary"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
