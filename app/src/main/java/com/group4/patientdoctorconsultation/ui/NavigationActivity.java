@@ -80,7 +80,7 @@ public class NavigationActivity extends AppCompatActivity {
         viewModel.getProfile().observe(this, profile -> {
             if (profile != null && profile.getResource() != null) {
                 this.profile = profile.getResource();
-                if (this.profile.getProfileType() == Profile.ProfileType.NONE) {
+                if (this.profile.getProfileType() == null || this.profile.getProfileType() == Profile.ProfileType.NONE) {
                     updateProfileType(viewModel);
                 } else {
                     reloadFragment();

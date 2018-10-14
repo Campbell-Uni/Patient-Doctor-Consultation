@@ -107,7 +107,7 @@ public class ViewPatientProfileDialogFragment extends PacketItemDialog {
         return DataPacketItem.DataPacketItemType.NOTE;
     }
 
-    private boolean cancelEnabledByDefault() {
+    protected boolean cancelEnabledByDefault() {
         return true;
     }
 }

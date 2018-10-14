@@ -59,7 +59,10 @@ public class ProfileDialogFragment extends PacketItemDialog {
         String listType = Objects.requireNonNull(getArguments()).getString(EXTRA_PROFILE_LIST_TYPE);
         View view = inflater.inflate(R.layout.fragment_dialog_profile, null);
         ProfileViewModel profileViewModel = DependencyInjector.provideProfileViewModel(requireActivity());
-        ProfileAdapter profileAdapter = new ProfileAdapter(item -> profile = item);
+        ProfileAdapter profileAdapter = new ProfileAdapter(item -> {
+            profile = item;
+            savePacketItem();
+        });
         RecyclerView profileList = view.findViewById(R.id.profile_list);
         Profile.ProfileType requiredProfileType = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT ? Profile.ProfileType.DOCTOR : Profile.ProfileType.PATIENT;
 
@@ -91,5 +94,10 @@ public class ProfileDialogFragment extends PacketItemDialog {
     @Override
     protected String getTitle() {
         return "Select a Profile";
+    }
+
+    @Override
+    protected boolean saveEnabledByDefault() {
+        return false;
     }
 }

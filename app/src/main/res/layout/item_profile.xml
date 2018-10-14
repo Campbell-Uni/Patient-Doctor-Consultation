@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="@{profile.userName}"
+            android:text='@{profile.displayName}'
             tools:text="Packet Title" />
 
     </android.support.v7.widget.CardView>

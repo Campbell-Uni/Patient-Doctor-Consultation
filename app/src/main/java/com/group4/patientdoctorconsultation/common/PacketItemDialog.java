@@ -32,15 +32,7 @@ public abstract class PacketItemDialog extends DialogFragment {
                     dialog.cancel();
                     (getTargetFragment()).onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
                 })
-                .setPositiveButton("SAVE", (dialogInterface, i) -> {
-                    Intent result = new Intent();
-                    DataPacketItem dataPacketItem = getDataPacketItem();
-                    dataPacketItem.setDataPacketItemType(getPacketItemType());
-                    dataPacketItem.setValue(getDialogResult());
-                    dataPacketItem.setDisplayValue(getDialogDisplayResult());
-                    result.putExtra(EXTRA_RESULT, dataPacketItem);
-                    (getTargetFragment()).onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
-                })
+                .setPositiveButton("SAVE", (dialogInterface, i) -> savePacketItem())
                 .create();
 
             alertDialog.setOnShowListener(dialogInterface -> {
@@ -49,6 +41,17 @@ public abstract class PacketItemDialog extends DialogFragment {
         });
 
         return alertDialog;
+    }
+
+    public void savePacketItem() {
+        Intent result = new Intent();
+        DataPacketItem dataPacketItem = getDataPacketItem();
+        dataPacketItem.setDataPacketItemType(getPacketItemType());
+        dataPacketItem.setValue(getDialogResult());
+        dataPacketItem.setDisplayValue(getDialogDisplayResult());
+        result.putExtra(EXTRA_RESULT, dataPacketItem);
+        (getTargetFragment()).onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
+        alertDialog.cancel();
     }
 
     protected AlertDialog getAlertDialog() {
@@ -60,7 +63,7 @@ public abstract class PacketItemDialog extends DialogFragment {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private boolean cancelEnabledByDefault() {
+    protected boolean cancelEnabledByDefault() {
         return true;
     }
 

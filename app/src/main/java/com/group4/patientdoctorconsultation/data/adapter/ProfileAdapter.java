@@ -20,10 +20,8 @@ public class ProfileAdapter extends BindingAdapter<Profile, ItemProfileBinding> 
     protected ItemProfileBinding createBinding(LayoutInflater inflater, ViewGroup parent) {
         final ItemProfileBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_profile, parent, false);
         binding.getRoot().setOnClickListener(v -> {
-            replaceListItems(getListItems());
             Profile chosen = binding.getProfile();
             if (chosen != null) {
-                binding.getRoot().setBackgroundResource(R.color.colorSelectedOffWhite);
                 clickListener.onClicked(chosen);
             }
         });

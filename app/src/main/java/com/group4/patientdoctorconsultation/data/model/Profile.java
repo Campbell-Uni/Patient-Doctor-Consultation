@@ -172,4 +172,25 @@ public class Profile extends IndexedFirestoreResource {
     public void setLinkedProfiles(Map<String, Boolean> linkedProfiles) {
         this.linkedProfiles = linkedProfiles;
     }
+
+    @Exclude
+    public String getDisplayName(){
+        String name = "";
+
+        if(lastName == null || lastName.isEmpty()){
+            name += "No Surname";
+        }else{
+            name += lastName;
+        }
+
+        name += ", ";
+
+        if(firstName == null || firstName.isEmpty()){
+            name += "No First Name";
+        }else{
+            name += firstName;
+        }
+
+        return name;
+    }
 }
