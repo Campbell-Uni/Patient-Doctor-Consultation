@@ -152,15 +152,6 @@
                 app:layout_constraintStart_toStartOf="@+id/edit_last_name"/>
 
         <TextView
-                android:id="@+id/label_age"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="@string/label_profile_age"
-                app:layout_constraintBottom_toTopOf="@+id/edit_age"
-                app:layout_constraintStart_toStartOf="@+id/edit_age"/>
-
-        <TextView
                 android:id="@+id/label_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
