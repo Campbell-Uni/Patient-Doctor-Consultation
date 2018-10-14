@@ -48,6 +48,7 @@ public class ProfileFragment extends FirestoreFragment {
             doctorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_doctor_profile, container, false);
             doctorBinding.setProfileHandler(this);
             doctorBinding.editSave.setOnClickListener(this::submit);
+            doctorBinding.signOutButton.setOnClickListener(this::logout);
             view = doctorBinding.getRoot();
         }
 
