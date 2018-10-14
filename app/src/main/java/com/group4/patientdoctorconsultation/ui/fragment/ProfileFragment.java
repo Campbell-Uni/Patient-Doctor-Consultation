@@ -128,9 +128,12 @@ public class ProfileFragment extends FirestoreFragment {
 
     private boolean validateProfile(Profile profile) {
         String errorMessage = "";
-        String gender = profile.getGender().toLowerCase().trim();
-
-        if (!gender.equals("male") && !gender.equals("female") && !gender.equals("other")) {
+        try{
+            String gender = profile.getGender().toLowerCase().trim();
+            if (!gender.equals("male") && !gender.equals("female") && !gender.equals("other")) {
+                throw new Exception();
+            }
+        }catch (Exception e){
             errorMessage += "\n Gender must be: Male, Female or Other";
         }
 
