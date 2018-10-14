@@ -29,6 +29,7 @@ import com.group4.patientdoctorconsultation.ui.dialogfragment.NewPacketDialogFra
 import com.group4.patientdoctorconsultation.ui.dialogfragment.ProfileDialogFragment;
 import com.group4.patientdoctorconsultation.ui.dialogfragment.TextDialogFragment;
 import com.group4.patientdoctorconsultation.ui.dialogfragment.ViewPatientProfileDialogFragment;
+import com.group4.patientdoctorconsultation.ui.dialogfragment.ViewDoctorProfileDialogFragment;
 import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.DataPacketViewModel;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
@@ -45,6 +46,7 @@ public class HomeFragment extends FirestoreFragment
     private static final int RC_TITLE = 1;
     private static final int RC_PROFILE = 2;
     private static final int RC_VIEW_PROFILE = 3;
+    private static final int RC_VIEW_DOCTOR_PROFILE = 4;
     private static final String TAG = HomeFragment.class.getSimpleName();
 
     private DataPacketViewModel dataPacketViewModel;
@@ -183,5 +185,11 @@ public class HomeFragment extends FirestoreFragment
         ViewPatientProfileDialogFragment viewPatientProfileDialogFragment = ViewPatientProfileDialogFragment.newInstance(patient);
         viewPatientProfileDialogFragment.setTargetFragment(this, RC_VIEW_PROFILE);
         viewPatientProfileDialogFragment.show(Objects.requireNonNull(getFragmentManager()).beginTransaction(), TAG);
+    }
+
+    private void viewDoctorProfile(Profile doctor) {
+        ViewDoctorProfileDialogFragment viewDoctorProfileDialogFragment = ViewDoctorProfileDialogFragment.newInstance(doctor);
+        viewDoctorProfileDialogFragment.setTargetFragment(this, RC_VIEW_DOCTOR_PROFILE);
+        viewDoctorProfileDialogFragment.show(Objects.requireNonNull(getFragmentManager()).beginTransaction(), TAG);
     }
 }
