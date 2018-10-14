@@ -121,9 +121,18 @@ public class ProfileFragment extends FirestoreFragment {
 
     public void lockUnlockLayout(View view){
         if(isPatient){
-            patientBinding.setLocked(!patientBinding.getLocked());
+            boolean locked = patientBinding.getLocked();
+            if(!locked){
+                editTextBackground = patientBinding.editFirstName.getBackground();
+            }
+            patientBinding.setLocked(!locked);
         }else{
-            doctorBinding.setLocked(!doctorBinding.getLocked());
+            boolean locked = doctorBinding.getLocked();
+            if(!locked){
+                editTextBackground = doctorBinding.editFirstName.getBackground();
+            }
+            doctorBinding.setLocked(!locked);
+
         }
     }
 

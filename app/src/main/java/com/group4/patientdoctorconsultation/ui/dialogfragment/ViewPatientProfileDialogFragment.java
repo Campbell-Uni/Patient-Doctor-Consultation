@@ -60,7 +60,7 @@ public class ViewPatientProfileDialogFragment extends PacketItemDialog {
         alertDialog = new AlertDialog.Builder(requireActivity())
                 .setTitle(getTitle().replace("_", " "))
                 .setView(getView(getTargetFragment().getLayoutInflater()))
-                .setNegativeButton("CANCEL", (dialog, which) -> {
+                .setNegativeButton("OK", (dialog, which) -> {
                     dialog.cancel();
                     (getTargetFragment()).onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
                 })
@@ -95,7 +95,7 @@ public class ViewPatientProfileDialogFragment extends PacketItemDialog {
     }
 
     @Override
-    protected String getTitle(){ return "Patient Profile"; }
+    protected String getTitle(){ return "Profile"; }
 
     @Override
     public String getDialogResult(){

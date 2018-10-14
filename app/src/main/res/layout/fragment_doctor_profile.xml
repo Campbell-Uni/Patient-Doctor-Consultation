@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="30dp"
-            android:minHeight="700dp"
+            android:minHeight="500dp"
             style="@style/PrimaryFragment">
 
 
@@ -43,12 +43,11 @@
                 android:ems="10"
                 android:hint="@string/profile_hint_first_name"
                 android:text="@={profile.firstName}"
-                android:background="@{profileHandler.getEditTextBackground(locked)}"
                 android:inputType='@{locked ? InputType.TYPE_NULL : InputType.TYPE_CLASS_TEXT}'
-                app:layout_constraintBottom_toTopOf="@+id/edit_email"
                 app:layout_constraintEnd_toStartOf="@+id/edit_last_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
         <EditText
                 android:id="@+id/edit_last_name"
@@ -57,9 +56,7 @@
                 android:ems="10"
                 android:hint="@string/profile_hint_last_name"
                 android:text="@={profile.lastName}"
-                android:background="@{profileHandler.getEditTextBackground(locked)}"
                 android:inputType='@{locked ? InputType.TYPE_NULL : InputType.TYPE_CLASS_TEXT}'
-                app:layout_constraintBottom_toTopOf="@+id/edit_email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/edit_first_name"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -70,13 +67,13 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/email_hint"
-                android:background="@{profileHandler.getEditTextBackground(locked)}"
                 android:inputType='@{locked ? InputType.TYPE_NULL : InputType.TYPE_CLASS_TEXT}'
                 android:text="@={profile.email}"
                 app:layout_constraintBottom_toTopOf="@+id/edit_location"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_first_name"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"/>
 
         <EditText
                 android:id="@+id/edit_location"
@@ -84,13 +81,14 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/hint_location"
-                android:background="@{profileHandler.getEditTextBackground(locked)}"
                 android:inputType='@{locked ? InputType.TYPE_NULL : InputType.TYPE_CLASS_TEXT}'
                 android:text="@={profile.location}"
-                app:layout_constraintBottom_toTopOf="@+id/edit_email"
                 app:layout_constraintEnd_toStartOf="@+id/edit_speciality"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_description"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"/>
 
         <EditText
                 android:id="@+id/edit_speciality"
@@ -98,13 +96,14 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/hint_speciality"
-                android:background="@{profileHandler.getEditTextBackground(locked)}"
                 android:inputType='@{locked ? InputType.TYPE_NULL : InputType.TYPE_CLASS_TEXT}'
                 android:text="@={profile.specialty}"
-                app:layout_constraintBottom_toTopOf="@+id/edit_email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/edit_location"
-                app:layout_constraintTop_toBottomOf="@+id/edit_description"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"/>
 
         <EditText
                 android:id="@+id/edit_description"
@@ -113,13 +112,13 @@
                 android:minHeight="80dp"
                 android:ems="10"
                 android:hint="@string/description_hint"
-                android:background="@{profileHandler.getEditTextBackground(locked)}"
                 android:inputType='@{locked ? InputType.TYPE_NULL : InputType.TYPE_TEXT_FLAG_MULTI_LINE}'
                 android:text="@={profile.description}"
-                app:layout_constraintBottom_toTopOf="@+id/edit_save"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_location"/>
+                app:layout_constraintTop_toBottomOf="@+id/edit_location"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"/>
 
         <TextView
                 android:id="@+id/label_first_name"
@@ -183,7 +182,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:onClick="@{profileHandler::lockUnlockLayout}"
-                android:visibility="@{locked &amp;&amp; editable ? View.VISIBLE : View.GONE}"
+                android:visibility="@{locked &amp;&amp; editable ? View.VISIBLE : View.INVISIBLE}"
                 android:text="@string/edit"
                 android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
