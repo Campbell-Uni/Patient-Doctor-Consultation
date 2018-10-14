@@ -45,7 +45,7 @@ public class ProfileDialogFragment extends PacketItemDialog {
 
     @Override
     protected String getDialogDisplayResult() {
-        return profile != null ? profile.getUserName() : "";
+        return profile != null ? profile.getFirstName() + " " + profile.getLastName() : "";
     }
 
     @Override

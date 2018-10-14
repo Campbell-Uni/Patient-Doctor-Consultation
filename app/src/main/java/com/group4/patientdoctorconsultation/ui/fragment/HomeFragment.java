@@ -129,7 +129,7 @@ public class HomeFragment extends FirestoreFragment
                     Map<String, Boolean> linkedProfiles = dataPacket.getLinkedProfiles();
                     linkedProfiles.put(selectedDoctor.getId(), true);
                     dataPacket.setLinkedProfiles(linkedProfiles);
-                    dataPacket.setDoctorName(selectedDoctor.getUserName());
+                    dataPacket.setDoctorName(selectedDoctor.getFirstName() + " " + selectedDoctor.getLastName());
                 }
 
                 String profileName = ((NavigationActivity) requireActivity()).getProfileName();

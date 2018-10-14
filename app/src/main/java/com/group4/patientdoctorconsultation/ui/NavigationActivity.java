@@ -143,7 +143,7 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     public String getProfileName() {
-        return profile.getUserName();
+        return profile.getFirstName() + " " + profile.getLastName();
     }
 
     public Profile.ProfileType getProfileType() {
