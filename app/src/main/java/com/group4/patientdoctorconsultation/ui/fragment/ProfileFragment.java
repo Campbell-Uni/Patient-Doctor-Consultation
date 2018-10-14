@@ -1,11 +1,13 @@
 package com.group4.patientdoctorconsultation.ui.fragment;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class ProfileFragment extends FirestoreFragment {
@@ -68,9 +71,9 @@ public class ProfileFragment extends FirestoreFragment {
         viewModel = DependencyInjector.provideProfileViewModel(requireActivity());
         viewModel.getProfile().observe(this, profile -> {
             if (profile != null && handleFirestoreResult(profile)) {
-                if(isPatient){
+                if (isPatient) {
                     patientBinding.setProfile(profile.getResource());
-                }else{
+                } else {
                     doctorBinding.setProfile(profile.getResource());
                 }
             }
@@ -79,6 +82,7 @@ public class ProfileFragment extends FirestoreFragment {
 
     private void bindAge(EditText ageField) {
         Calendar calendar = Calendar.getInstance();
+        Date today = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.US);
         DatePickerDialog.OnDateSetListener datePicker = (datePicker1, year, monthOfYear, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
@@ -87,13 +91,16 @@ public class ProfileFragment extends FirestoreFragment {
             ageField.setText(dateFormat.format(calendar.getTime()));
         };
 
-        ageField.setOnClickListener(view -> new DatePickerDialog(
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireContext(),
                 datePicker,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)).show()
-        );
+                calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.getDatePicker().setMaxDate(today.getTime());
+
+        ageField.setOnClickListener(view -> datePickerDialog.show());
     }
 
     public void submit(View view) { //Do not remove parameter, required for data patientBinding
@@ -101,10 +108,15 @@ public class ProfileFragment extends FirestoreFragment {
         lockUnlockLayout(null);
         showLoadingIcon();
 
-        if(isPatient){
+        if (isPatient) {
             profile = patientBinding.getProfile();
-        }else{
+        } else {
             profile = doctorBinding.getProfile();
+        }
+
+        if (!validateProfile(profile)) {
+            hideLoadingIcon();
+            return;
         }
 
         viewModel.updateProfile(profile).observe(this, isComplete -> {
@@ -114,21 +126,62 @@ public class ProfileFragment extends FirestoreFragment {
         });
     }
 
+    private boolean validateProfile(Profile profile) {
+        String errorMessage = "";
+        String gender = profile.getGender().toLowerCase();
+
+        if (!gender.equals("male") && !gender.equals("female") && !gender.equals("other")) {
+            errorMessage += "\n Gender must be: Male, Female or Other";
+        }
+
+        try {
+            double height = Double.parseDouble(profile.getHeightInCentimetres().replaceAll("[^\\d.]", ""));
+            if (height > 200 || height < 0) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            errorMessage += "\n Height not valid";
+        }
+
+        try {
+            double weight = Double.parseDouble(profile.getWeightInKg().replaceAll("[^\\d.]", ""));
+            if (weight > 200 || weight < 0) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            errorMessage += "\n Weight not valid";
+        }
+
+        if (!errorMessage.isEmpty()) {
+            new AlertDialog
+                    .Builder(requireActivity())
+                    .setTitle("Invalid Profile")
+                    .setMessage("Please correct the following: " + errorMessage)
+                    .setNegativeButton("OK", (dialog, id) -> {
+                    })
+                    .show();
+
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean logout(View view) { //Do not remove parameter, required for data patientBinding
         FirebaseAuth.getInstance().signOut();
         return true;
     }
 
-    public void lockUnlockLayout(View view){
-        if(isPatient){
+    public void lockUnlockLayout(View view) {
+        if (isPatient) {
             boolean locked = patientBinding.getLocked();
-            if(!locked){
+            if (!locked) {
                 editTextBackground = patientBinding.editFirstName.getBackground();
             }
             patientBinding.setLocked(!locked);
-        }else{
+        } else {
             boolean locked = doctorBinding.getLocked();
-            if(!locked){
+            if (!locked) {
                 editTextBackground = doctorBinding.editFirstName.getBackground();
             }
             doctorBinding.setLocked(!locked);
@@ -136,10 +189,10 @@ public class ProfileFragment extends FirestoreFragment {
         }
     }
 
-    public Drawable getEditTextBackground(boolean isLocked){
-        if(isLocked){
+    public Drawable getEditTextBackground(boolean isLocked) {
+        if (isLocked) {
             return getResources().getDrawable(R.drawable.transparent);
-        }else{
+        } else {
             return editTextBackground;
         }
     }
