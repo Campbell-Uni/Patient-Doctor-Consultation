@@ -13,6 +13,7 @@ import com.group4.patientdoctorconsultation.common.PacketItemDialog;
 import com.group4.patientdoctorconsultation.data.adapter.ProfileAdapter;
 import com.group4.patientdoctorconsultation.data.model.DataPacketItem;
 import com.group4.patientdoctorconsultation.data.model.Profile;
+import com.group4.patientdoctorconsultation.ui.NavigationActivity;
 import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
 import com.group4.patientdoctorconsultation.viewmodel.ProfileViewModel;
 
@@ -56,11 +57,12 @@ public class ProfileDialogFragment extends PacketItemDialog {
         }
 
         String listType = Objects.requireNonNull(getArguments()).getString(EXTRA_PROFILE_LIST_TYPE);
-
         View view = inflater.inflate(R.layout.fragment_dialog_profile, null);
         ProfileViewModel profileViewModel = DependencyInjector.provideProfileViewModel(requireActivity());
         ProfileAdapter profileAdapter = new ProfileAdapter(item -> profile = item);
         RecyclerView profileList = view.findViewById(R.id.profile_list);
+        Profile.ProfileType requiredProfileType = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT ? Profile.ProfileType.DOCTOR : Profile.ProfileType.PATIENT;
+
         profileList.setLayoutManager(new LinearLayoutManager(requireContext()));
         profileList.setAdapter(profileAdapter);
 
@@ -71,7 +73,7 @@ public class ProfileDialogFragment extends PacketItemDialog {
                 }
             });
         } else {
-            profileViewModel.getAllProfiles().observe(this, profiles -> {
+            profileViewModel.getAllProfiles(requiredProfileType).observe(this, profiles -> {
                 if(profiles != null && ((FirestoreFragment) getTargetFragment()).handleFirestoreResult(profiles)){
                     profileAdapter.replaceListItems(profiles.getResource());
                 }

@@ -12,7 +12,7 @@ import com.group4.patientdoctorconsultation.databinding.ItemProfileBinding;
 
 public class ProfileAdapter extends BindingAdapter<Profile, ItemProfileBinding> {
 
-    public ProfileAdapter(ClickListener<Profile> clickListener){
+    public ProfileAdapter(ClickListener<Profile> clickListener) {
         super(clickListener);
     }
 

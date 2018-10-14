@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import java.util.Objects;
 
 import androidx.navigation.Navigation;
 
+@SuppressLint("CommitTransaction")
 public class HomeFragment extends FirestoreFragment
         implements View.OnClickListener {
 
@@ -57,13 +59,9 @@ public class HomeFragment extends FirestoreFragment
 
         dataPacketViewModel = DependencyInjector.provideDataPacketViewModel(requireActivity());
         profileViewModel = DependencyInjector.provideProfileViewModel(requireActivity());
+        boolean isPatient = isPatient();
 
-        profileAdapter = new ProfileAdapter(item -> {
-            viewPatientProfile(item);
-
-            selectedDoctor = item;
-            /*createDataPacket();*/
-        });
+        profileAdapter = new ProfileAdapter(item -> viewPatientProfile(item));
         RecyclerView profileList = view.findViewById(R.id.profile_list);
         profileList.setLayoutManager(new LinearLayoutManager(requireContext()));
         profileList.setAdapter(profileAdapter);
@@ -84,8 +82,7 @@ public class HomeFragment extends FirestoreFragment
             }
         });
 
-        view.findViewById(R.id.new_packet_card).setOnClickListener(this);
-        boolean isPatient = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT;
+        CardView newPacketButton = view.findViewById(R.id.new_packet_card);
 
         if (!isPatient) {
             TextView title = view.findViewById(R.id.linked_profile_title);
@@ -95,6 +92,9 @@ public class HomeFragment extends FirestoreFragment
             newPatientCard.setVisibility(View.VISIBLE);
             newPatientCard.setOnClickListener(this);
             mapCard.setVisibility(View.GONE);
+            newPacketButton.setVisibility(View.GONE);
+        }else{
+            newPacketButton.setOnClickListener(this);
         }
 
         return view;
@@ -143,12 +143,13 @@ public class HomeFragment extends FirestoreFragment
                             }
                         });
             } else if (requestCode == RC_PROFILE){
+                showLoadingIcon();
                 DependencyInjector
                         .provideProfileViewModel(requireActivity())
                         .addLinkedProfile(result.getValue())
                         .observe(HomeFragment.this, updateResult -> {
                             if(updateResult != null && handleFirestoreResult(updateResult)){
-                                Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show();
+                                hideLoadingIcon();
                             }
                         });
             }
@@ -165,21 +166,19 @@ public class HomeFragment extends FirestoreFragment
         Navigation.findNavController(view).navigate(R.id.action_home_to_data_packet);
     }
 
-    @SuppressLint("CommitTransaction")
+
     private void createDataPacket() {
         NewPacketDialogFragment newPacketDialogFragment = new NewPacketDialogFragment();
         newPacketDialogFragment.setTargetFragment(this, RC_TITLE);
         newPacketDialogFragment.show(Objects.requireNonNull(getFragmentManager()).beginTransaction(), TAG);
     }
 
-    @SuppressLint("CommitTransaction")
     private void assignLinkedProfile() {
         ProfileDialogFragment profileDialogFragment = ProfileDialogFragment.newInstance(ProfileDialogFragment.EXTRA_PROFILE_LIST_TYPE_FULL);
         profileDialogFragment.setTargetFragment(this, RC_PROFILE);
         profileDialogFragment.show(Objects.requireNonNull(getFragmentManager()).beginTransaction(), TAG);
     }
 
-    @SuppressLint("CommitTransaction")
     private void viewPatientProfile(Profile patient) {
         ViewPatientProfileDialogFragment viewPatientProfileDialogFragment = ViewPatientProfileDialogFragment.newInstance(patient);
         viewPatientProfileDialogFragment.setTargetFragment(this, RC_VIEW_PROFILE);

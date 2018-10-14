@@ -55,9 +55,9 @@ public class ProfileRepository {
         );
     }
 
-    public LiveQuery<Profile> getAllProfiles(){
+    public LiveQuery<Profile> getAllProfiles(Profile.ProfileType profileType){
         return new LiveQuery<>(
-                profileCollection,
+                profileCollection.whereEqualTo(Profile.FIELD_PROFILE_TYPE, profileType.toString()),
                 Profile.class
         );
     }

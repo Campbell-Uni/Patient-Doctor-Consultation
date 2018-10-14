@@ -13,6 +13,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import android.view.View;
+import android.widget.ProgressBar;
 import com.firebase.ui.auth.AuthUI;
 import com.group4.patientdoctorconsultation.R;
 import com.group4.patientdoctorconsultation.data.model.Profile;
@@ -31,6 +33,7 @@ public class NavigationActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
     private static final int RC_PERMISSION = 2;
     private Profile profile;
+    private ProgressBar loadingIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,8 @@ public class NavigationActivity extends AppCompatActivity {
         initialiseViewModel();
         initialiseNavigationController();
         requestAllPermissions();
+
+        loadingIcon = findViewById(R.id.loading_icon);
     }
 
     @Override
@@ -47,7 +52,7 @@ public class NavigationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN && resultCode != Activity.RESULT_OK) {
             startSignIn();
-        }else if(requestCode == RC_PERMISSION && resultCode != Activity.RESULT_OK){
+        } else if (requestCode == RC_PERMISSION && resultCode != Activity.RESULT_OK) {
             requestAllPermissions();
         }
     }
@@ -73,29 +78,40 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
         viewModel.getProfile().observe(this, profile -> {
-            if(profile != null && profile.getResource() != null){
+            if (profile != null && profile.getResource() != null) {
                 this.profile = profile.getResource();
-                if(this.profile.getProfileType() == Profile.ProfileType.NONE){
-                    Profile newProfile = this.profile;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Select a profile type");
-                    String[] profileTypes = {Profile.ProfileType.DOCTOR.toString(), Profile.ProfileType.PATIENT.toString()};
-                    builder.setItems(profileTypes, (dialog, which) -> {
-                       switch (which){
-                           case 0:
-                               newProfile.setProfileType(Profile.ProfileType.DOCTOR);
-                               break;
-                           default:
-                               newProfile.setProfileType(Profile.ProfileType.DOCTOR);
-                               break;
-                       }
-                       viewModel.updateProfile(newProfile);
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                if (this.profile.getProfileType() == Profile.ProfileType.NONE) {
+                    updateProfileType(viewModel);
+                } else {
+                    reloadFragment();
                 }
             }
         });
+    }
+
+    private void updateProfileType(ProfileViewModel viewModel) {
+        Profile newProfile = this.profile;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a profile type");
+        String[] profileTypes = {Profile.ProfileType.DOCTOR.toString(), Profile.ProfileType.PATIENT.toString()};
+        builder.setItems(profileTypes, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    newProfile.setProfileType(Profile.ProfileType.DOCTOR);
+                    break;
+                default:
+                    newProfile.setProfileType(Profile.ProfileType.PATIENT);
+                    break;
+            }
+            viewModel.updateProfile(newProfile);
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void reloadFragment() {
+        NavController navController = Navigation.findNavController(this, R.id.navigation_fragment);
+        navController.navigate(navController.getCurrentDestination().getId());
     }
 
     private void startSignIn() {
@@ -116,7 +132,7 @@ public class NavigationActivity extends AppCompatActivity {
     private void requestAllPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (
                 this.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
         )) {
             ActivityCompat.requestPermissions(
                     this,
@@ -126,11 +142,23 @@ public class NavigationActivity extends AppCompatActivity {
         }
     }
 
-    public String getProfileName(){
+    public String getProfileName() {
         return profile.getUserName();
     }
 
     public Profile.ProfileType getProfileType() {
         return profile == null || profile.getProfileType() == Profile.ProfileType.NONE ? Profile.ProfileType.PATIENT : profile.getProfileType();
+    }
+
+    public void hideLoadingIcon() {
+        if (loadingIcon != null) {
+            loadingIcon.setVisibility(View.GONE);
+        }
+    }
+
+    public void showLoadingIcon() {
+        if (loadingIcon != null) {
+            loadingIcon.setVisibility(View.VISIBLE);
+        }
     }
 }

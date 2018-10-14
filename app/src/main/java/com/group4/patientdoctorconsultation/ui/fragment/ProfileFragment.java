@@ -2,6 +2,7 @@ package com.group4.patientdoctorconsultation.ui.fragment;
 
 import android.app.DatePickerDialog;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,23 +32,31 @@ public class ProfileFragment extends FirestoreFragment {
     private FragmentProfileBinding patientBinding;
     private FragmentDoctorProfileBinding doctorBinding;
     private Boolean isPatient;
+    private Drawable editTextBackground;
 
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        isPatient =((NavigationActivity) requireActivity()).getProfileType().equals(Profile.ProfileType.PATIENT);
         View view;
+        isPatient = isPatient();
 
         if (isPatient) {
             patientBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
+            editTextBackground = patientBinding.editFirstName.getBackground();
             patientBinding.setProfileHandler(this);
+            patientBinding.setLocked(true);
+            patientBinding.setEditable(true);
             patientBinding.signOutButton.setOnClickListener(this::logout);
             bindAge(patientBinding.editAge);
             view = patientBinding.getRoot();
         } else {
             doctorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_doctor_profile, container, false);
+            editTextBackground = doctorBinding.editFirstName.getBackground();
             doctorBinding.setProfileHandler(this);
+            doctorBinding.setLocked(true);
+            doctorBinding.setEditable(true);
             doctorBinding.editSave.setOnClickListener(this::submit);
+            doctorBinding.signOutButton.setOnClickListener(this::logout);
             view = doctorBinding.getRoot();
         }
 
@@ -89,6 +98,8 @@ public class ProfileFragment extends FirestoreFragment {
 
     public void submit(View view) { //Do not remove parameter, required for data patientBinding
         Profile profile;
+        lockUnlockLayout(null);
+        showLoadingIcon();
 
         if(isPatient){
             profile = patientBinding.getProfile();
@@ -98,7 +109,7 @@ public class ProfileFragment extends FirestoreFragment {
 
         viewModel.updateProfile(profile).observe(this, isComplete -> {
             if (isComplete != null && handleFirestoreResult(isComplete) && isComplete.getResource()) {
-                Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show();
+                hideLoadingIcon();
             }
         });
     }
@@ -106,5 +117,21 @@ public class ProfileFragment extends FirestoreFragment {
     public boolean logout(View view) { //Do not remove parameter, required for data patientBinding
         FirebaseAuth.getInstance().signOut();
         return true;
+    }
+
+    public void lockUnlockLayout(View view){
+        if(isPatient){
+            patientBinding.setLocked(!patientBinding.getLocked());
+        }else{
+            doctorBinding.setLocked(!doctorBinding.getLocked());
+        }
+    }
+
+    public Drawable getEditTextBackground(boolean isLocked){
+        if(isLocked){
+            return getResources().getDrawable(R.drawable.transparent);
+        }else{
+            return editTextBackground;
+        }
     }
 }

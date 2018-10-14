@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="isPatient" type="Boolean"/>
+        <variable name="isPatient" type="boolean"/>
         <variable
             name="dataPacket"
             type="com.group4.patientdoctorconsultation.data.model.DataPacket" />

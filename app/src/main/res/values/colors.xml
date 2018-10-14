@@ -7,4 +7,5 @@
     <color name="colorOffWhite">#e0f2f1</color>
     <color name="colorSelectedOffWhite">#e0f2f1</color>
     <color name="colorDelete">#ff7961</color>
+    <drawable name="transparent">#00000000</drawable>
 </resources>

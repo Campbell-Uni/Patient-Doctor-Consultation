@@ -52,7 +52,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_data_packet, container, false);
         viewModel = DependencyInjector.provideDataPacketViewModel(requireActivity());
 
-        isPatient = ((NavigationActivity) requireActivity()).getProfileType() == Profile.ProfileType.PATIENT;
+        isPatient = isPatient();
         binding.setIsPatient(isPatient);
 
         initialisePacketItemList(binding.packetItemList);
@@ -133,6 +133,8 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
                     (DataPacketItem) data.getSerializableExtra(PacketItemDialog.EXTRA_RESULT)
             );
 
+            showLoadingIcon();
+
             switch (requestCode) {
                 case RC_ADD_PACKET_ITEM:
                     listener = viewModel.addDataPacketItem(dataPacket, result);
@@ -160,7 +162,7 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
 
             listener.observe(this, actionResult -> {
                 if (actionResult != null && handleFirestoreResult(actionResult)) {
-                    Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show();
+                    hideLoadingIcon();
                 }
             });
         } catch (Exception e) {
@@ -189,9 +191,10 @@ public class DataPacketFragment extends FirestoreFragment implements View.OnClic
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 DataPacketItem packetItem = packetItemAdapter.getItem(viewHolder.getAdapterPosition());
                 packetItemAdapter.removeAt(viewHolder.getAdapterPosition());
+                showLoadingIcon();
                 viewModel.deleteDataPacketItem(binding.getDataPacket(), packetItem).observe(DataPacketFragment.this, result -> {
                     if (result != null && handleFirestoreResult(result) && result.getResource()) {
-                        Toast.makeText(requireContext(), "Saved", Toast.LENGTH_LONG).show();
+                        hideLoadingIcon();
                     }
                 });
             }

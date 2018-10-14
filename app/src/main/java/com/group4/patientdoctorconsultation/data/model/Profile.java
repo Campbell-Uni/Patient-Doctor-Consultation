@@ -8,11 +8,12 @@ import java.util.Map;
 
 public class Profile extends IndexedFirestoreResource {
 
-    public enum ProfileType{DOCTOR, PATIENT, NONE}
+    public enum ProfileType {DOCTOR, PATIENT, NONE}
 
     public static final String COLLECTION_NAME = "profiles";
 
     public static final String FIELD_LINKED_PROFILES = "linkedProfiles";
+    public static final String FIELD_PROFILE_TYPE = "profileTypeString";
 
     private ProfileType profileType;
     private String userName;
@@ -25,11 +26,11 @@ public class Profile extends IndexedFirestoreResource {
     private String medicalConditions;
 
     //doctor profile
-   private String doctorname;
-   private  String specialty;
-   private String location;
-   private  String email;
-   private  String description;
+    private String doctorname;
+    private String specialty;
+    private String location;
+    private String email;
+    private String description;
 
     private Map<String, Boolean> linkedProfiles;
 
@@ -47,14 +48,14 @@ public class Profile extends IndexedFirestoreResource {
         this.profileType = profileType;
     }
 
-    public String getProfileTypeString(){
+    public String getProfileTypeString() {
         return profileType != null ? profileType.toString() : "";
     }
 
-    public void setProfileTypeString(String profileType){
-        try{
+    public void setProfileTypeString(String profileType) {
+        try {
             this.profileType = ProfileType.valueOf(profileType);
-        }catch (Exception e){
+        } catch (Exception e) {
             this.profileType = ProfileType.NONE;
         }
     }

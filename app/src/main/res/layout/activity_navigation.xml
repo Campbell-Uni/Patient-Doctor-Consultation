@@ -16,6 +16,15 @@
         app:titleTextColor="@android:color/white"
         android:theme="@style/ToolbarTheme"/>
 
+    <ProgressBar
+            android:id="@+id/loading_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-7dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"/>
+
     <fragment
         android:id="@+id/navigation_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"

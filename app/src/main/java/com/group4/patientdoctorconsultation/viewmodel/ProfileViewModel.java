@@ -63,8 +63,8 @@ public class ProfileViewModel extends ViewModel implements FirebaseAuth.AuthStat
         return linkedProfiles;
     }
 
-    public LiveData<FailableResource<List<Profile>>> getAllProfiles(){
-        return profileRepository.getAllProfiles();
+    public LiveData<FailableResource<List<Profile>>> getAllProfiles(Profile.ProfileType profileType){
+        return profileRepository.getAllProfiles(profileType);
     }
 
     public LiveResultListener<Boolean> addLinkedProfile(String linkedProfileId){

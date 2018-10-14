@@ -20,6 +20,7 @@ import com.group4.patientdoctorconsultation.common.PacketItemDialog;
 import com.group4.patientdoctorconsultation.data.adapter.ProfileAdapter;
 import com.group4.patientdoctorconsultation.data.model.DataPacketItem;
 import com.group4.patientdoctorconsultation.data.model.Profile;
+import com.group4.patientdoctorconsultation.databinding.FragmentDoctorProfileBinding;
 import com.group4.patientdoctorconsultation.databinding.FragmentProfileBinding;
 import com.group4.patientdoctorconsultation.data.model.DataPacketItem;
 import com.group4.patientdoctorconsultation.utilities.DependencyInjector;
@@ -35,7 +36,6 @@ public class ViewPatientProfileDialogFragment extends PacketItemDialog {
     private static final String EXTRA_PATIENT_PROFILE = "patient_profile_extra";
 
     private Profile patient;
-    private FragmentProfileBinding binding;
     private AlertDialog alertDialog;
 
 
@@ -76,20 +76,22 @@ public class ViewPatientProfileDialogFragment extends PacketItemDialog {
     @Override
     @SuppressLint("InflateParams")
     public View getView(LayoutInflater inflater) {
-
-
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, null, false);
         patient = (Profile) Objects.requireNonNull(getArguments()).getSerializable(EXTRA_PATIENT_PROFILE);
-        binding.setProfile(patient);
+        if(patient.getProfileType() == Profile.ProfileType.PATIENT){
+            FragmentProfileBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, null, false);
 
-        Button saveButton = binding.getRoot().findViewById(R.id.edit_save);
-        Button cancelButton = binding.getRoot().findViewById(R.id.sign_out_button);
-        saveButton.setVisibility(binding.getRoot().GONE);
-        cancelButton.setVisibility(binding.getRoot().GONE);
+            binding.setProfile(patient);
+            binding.setLocked(true);
+            binding.setEditable(false);
+            return binding.getRoot();
+        }else{
+            FragmentDoctorProfileBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_doctor_profile, null, false);
 
-
-
-        return binding.getRoot();
+            binding.setProfile(patient);
+            binding.setLocked(true);
+            binding.setEditable(false);
+            return binding.getRoot();
+        }
     }
 
     @Override
