@@ -58,7 +58,7 @@ public class ProfileFragment extends FirestoreFragment {
             doctorBinding.setProfileHandler(this);
             doctorBinding.setLocked(true);
             doctorBinding.setEditable(true);
-            doctorBinding.editSave.setOnClickListener(this::submit);
+            //doctorBinding.editSave.setOnClickListener(this::submit);
             doctorBinding.signOutButton.setOnClickListener(this::logout);
             view = doctorBinding.getRoot();
         }
